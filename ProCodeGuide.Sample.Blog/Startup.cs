@@ -4,9 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProCodeGuide.Sample.Blog.Areas.Identity.Data;
+using ProCodeGuide.Sample.Blog.Areas.Identity;
 
 namespace ProCodeGuide.Sample.Blog
 {
@@ -24,6 +27,13 @@ namespace ProCodeGuide.Sample.Blog
         {
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddScoped<IUserClaimsPrincipalFactory<SampleAppUser>, ApplicationUserClaimsPrincipalFactory>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("EmailID", policy =>
+                policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", "support@procodeguide.com"
+                ));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
